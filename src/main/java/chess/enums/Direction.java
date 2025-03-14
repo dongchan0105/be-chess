@@ -22,10 +22,10 @@ public enum Direction {
     WWN(-2, 1),
     WWS(-2, -1);
 
-    private int xDegree;
-    private int yDegree;
+    private final int xDegree;
+    private final int yDegree;
 
-    private Direction(int xDegree, int yDegree) {
+    Direction(int xDegree, int yDegree) {
         this.xDegree = xDegree;
         this.yDegree = yDegree;
     }
@@ -54,12 +54,21 @@ public enum Direction {
         return Arrays.asList(NNE, NNW, SSE, SSW, EEN, EES, WWN, WWS);
     }
 
-    public static List<Direction> whitePawnDirection() {
-        return Arrays.asList(SOUTH, SOUTHEAST, SOUTHWEST);
-
+    // 🔹 폰의 전진 방향 (공격 X, 빈칸만 가능)
+    public static List<Direction> whitePawnForward() {
+        return Arrays.asList(SOUTH); // 한 칸 직진
     }
 
-    public static List<Direction> blackPawnDirection() {
-        return Arrays.asList(NORTH, NORTHEAST, NORTHWEST);
+    public static List<Direction> blackPawnForward() {
+        return Arrays.asList(NORTH); // 한 칸 직진
+    }
+
+    // 🔹 폰의 공격 방향 (대각선만, 상대 기물 있어야 가능)
+    public static List<Direction> whitePawnAttack() {
+        return Arrays.asList(SOUTHEAST, SOUTHWEST);
+    }
+
+    public static List<Direction> blackPawnAttack() {
+        return Arrays.asList(NORTHEAST, NORTHWEST);
     }
 }

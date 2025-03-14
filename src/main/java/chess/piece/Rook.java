@@ -10,6 +10,8 @@ import static chess.util.BoardPositionValidator.isWithinBoard;
 
 public class Rook extends Piece {
 
+    private Boolean isFirstMove = Boolean.TRUE;
+
     public Rook(Color color) {
         super(color);
     }

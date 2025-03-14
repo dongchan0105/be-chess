@@ -10,6 +10,7 @@ import static chess.util.BoardPositionValidator.isWithinBoard;
 
 public class King extends Piece {
 
+    private Boolean isFirstMove=Boolean.TRUE;
 
     public King(Color color) {
         super(color);

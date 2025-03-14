@@ -68,20 +68,49 @@ public class Game {
         return true;
     }
 
-    private void validateTargetHasSameColor(Position sourcePosition, Position targetPosition){
+    public boolean validateTargetHasSameColor(Position sourcePosition, Position targetPosition){
         if(board[sourcePosition.yPos()][sourcePosition.xPos()].getColor() == board[targetPosition.yPos()][targetPosition.xPos()].getColor()){
             throw new IllegalArgumentException("같은 색상의 말로는 이동할 수 없습니다.");
         }
+        return true;
     }
 
     private void validatePieceMoveAndChangePosition(Position sourcePosition, Position targetPosition) {
-        Piece sourePiece = board[sourcePosition.yPos()][sourcePosition.xPos()];
-        if(!sourePiece.canMove(targetPosition)){
+        Piece sourcePiece = board[sourcePosition.yPos()][sourcePosition.xPos()];
+
+        specialValidateOfPawn(targetPosition, sourcePiece);
+
+        if(!sourcePiece.canMove(targetPosition)){
             throw new IllegalArgumentException("해당 위치로 이동할 수 없는 기물입니다.");
         }
-        sourePiece.setCurrentPosition(targetPosition);
-        board[targetPosition.yPos()][targetPosition.xPos()] = sourePiece;
+
+        // 이동 처리
+        sourcePiece.setCurrentPosition(targetPosition);
+        board[targetPosition.yPos()][targetPosition.xPos()] = sourcePiece;
         board[sourcePosition.yPos()][sourcePosition.xPos()] = Piece.createBlank();
+
+        if (sourcePiece instanceof Pawn) {
+        ((Pawn) sourcePiece).setFirstMove(false);
+            ((Pawn) sourcePiece).setCanAttack(false);
+        }
+
+    }
+
+    public void specialValidateOfPawn(Position targetPosition, Piece sourcePiece) {
+        if(sourcePiece instanceof Pawn){
+            Pawn pawn = (Pawn) sourcePiece;
+
+            Color currentColor = sourcePiece.getColor();
+            Color opponentColor = currentColor == Color.WHITE ? Color.BLACK : Color.WHITE;
+            boolean isEnemyPiece = board[targetPosition.yPos()][targetPosition.xPos()].getColor() == opponentColor;
+
+            // 🔹 공격 가능한 경우 isCanAttack 활성화
+            if (isEnemyPiece) {
+                pawn.setCanAttack(true);
+            } else {
+                pawn.setCanAttack(false);
+            }
+        }
     }
 
     public double calculatePoint(Color color) {
